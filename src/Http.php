@@ -15,12 +15,13 @@ class Http
         $this->bodyFormat = 'json';
         $this->options = [
             'http_errors' => false,
+            'headers'     => [],
         ];
     }
 
     public function withoutRedirecting(): Http
     {
-        $this->mergeOptions(['allow_redirects' => false]);
+        $this->options['allow_redirects'] = false;
         return $this;
     }
 
@@ -57,32 +58,31 @@ class Http
 
     public function withHeaders(array $headers): Http
     {
-        $this->mergeOptions(['headers' => $headers]);
+        $this->options['headers'] = array_merge($this->options['headers'], $headers);
         return $this;
     }
 
     public function withBasicAuth(string $username, string $password)
     {
-        $this->mergeOptions(['auth' => [$username, $password]]);
+        $this->options['auth'] = [$username, $password];
         return $this;
     }
 
     public function withDigestAuth(string $username, string $password)
     {
-        $this->mergeOptions(['auth' => [$username, $password, 'digest']]);
+        $this->options['auth'] = [$username, $password, 'digest'];
         return $this;
     }
 
     public function timeout(int $seconds)
     {
-        $this->mergeOptions(['timeout' => $seconds]);
+        $this->options['timeout'] = $seconds;
         return $this;
     }
 
     public function get($url, $params = [])
     {
-        $this->mergeOptions(['query' => $params]); // Use query instead of body for GET
-        return $this->send('GET', $url, []);
+        return $this->send('GET', $url, [],  $params); // Use query instead of body for GET
     }
 
     public function post($url, $params = [])
@@ -105,10 +105,11 @@ class Http
         return $this->send('DELETE', $url, $params);
     }
 
-    public function send($method, $url, $params)
+    public function send($method, $url, $params, $query = [])
     {
-        $this->mergeOptions([$this->bodyFormat => $params]);
-        $this->mergeQuery($url);
+        $this->options['query'] = $query;
+        $this->options[$this->bodyFormat] = $params;
+        $this->mergeUrlQuery($url);
         try {
             return new HttpResponse((new GuzzleClient)->request($method, $url, $this->options));
         } catch (ConnectException $e) {
@@ -116,17 +117,12 @@ class Http
         }
     }
 
-    private function mergeOptions(...$options)
-    {
-        $this->options = array_merge_recursive($this->options, ...$options);
-    }
-
-    private function mergeQuery(string $url)
+    private function mergeUrlQuery(string $url)
     {
         // Parse URL query string and turn it into an array
         parse_str(parse_url($url, PHP_URL_QUERY), $query);
         if ($query) {
-            $this->mergeOptions(['query' => $query]);
+            $this->options['query'] = array_merge($this->options['query'], $query);
         }
     }
 }

@@ -21,6 +21,32 @@ class HttpTest extends TestCase
     }
 
     /** @test */
+    public function can_send_the_same_query_multiple_times()
+    {
+        $http = new Http;
+        $response = $http->get('https://httpbin.org/get', [
+            'foo' => 'bar',
+            'baz' => 'qux',
+        ]);
+        $this->assertArraySubset([
+            'args' => [
+                'foo' => 'bar',
+                'baz' => 'qux',
+            ],
+        ], $response->json());
+        $response = $http->get('https://httpbin.org/get', [
+            'foo' => 'bar',
+            'baz' => 'qux',
+        ]);
+        $this->assertArraySubset([
+            'args' => [
+                'foo' => 'bar',
+                'baz' => 'qux',
+            ],
+        ], $response->json());
+    }
+
+    /** @test */
     function query_parameters_in_url_are_sent()
     {
         $response = (new Http)->get('https://httpbin.org/get?foo=bar&baz=qux');
@@ -360,6 +386,16 @@ class HttpTest extends TestCase
         $response = (new Http)->withBasicAuth('zttp', 'secret')->get('https://httpbin.org/basic-auth/zttp/secret');
         $this->assertTrue($response->isSuccess());
         $response = (new Http)->withBasicAuth('fail', 'wrong')->get('https://httpbin.org/basic-auth/zttp/secret');
+        $this->assertFalse($response->isSuccess());
+        $this->assertTrue($response->isClientError());
+    }
+
+    /** @test */
+    public function can_call_basic_auth_multiple_times_with_same_result()
+    {
+        $response = (new Http)->withBasicAuth('zttp', 'secret')->withBasicAuth('zttp', 'secret')->get('https://httpbin.org/basic-auth/zttp/secret');
+        $this->assertTrue($response->isSuccess());
+        $response = (new Http)->withBasicAuth('fail', 'wrong')->withBasicAuth('fail', 'wrong')->get('https://httpbin.org/basic-auth/zttp/secret');
         $this->assertFalse($response->isSuccess());
         $this->assertTrue($response->isClientError());
     }
