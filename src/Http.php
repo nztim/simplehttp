@@ -82,7 +82,7 @@ class Http
 
     public function get($url, $params = [])
     {
-        return $this->send('GET', $url, [],  $params); // Use query instead of body for GET
+        return $this->send('GET', $url, [], $params); // Use query instead of body for GET
     }
 
     public function post($url, $params = [])
@@ -108,7 +108,9 @@ class Http
     public function send($method, $url, $params, $query = [])
     {
         $this->options['query'] = $query;
-        $this->options[$this->bodyFormat] = $params;
+        if ($params) {
+            $this->options[$this->bodyFormat] = $params;
+        }
         $this->mergeUrlQuery($url);
         try {
             return new HttpResponse((new GuzzleClient)->request($method, $url, $this->options));
