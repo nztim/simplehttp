@@ -1,10 +1,10 @@
 <?php namespace NZTim\SimpleHttp;
 
-use GuzzleHttp\Psr7\Response;
+use Psr\Http\Message\ResponseInterface;
 
 class HttpResponse
 {
-    public function __construct(Response $response)
+    public function __construct(ResponseInterface $response)
     {
         $this->response = $response;
     }

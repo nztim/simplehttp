@@ -113,7 +113,7 @@ class Http
         }
         $this->mergeUrlQuery($url);
         try {
-            return new HttpResponse((new GuzzleClient)->request($method, $url, $this->options));
+            return new HttpResponse((new GuzzleClient())->request($method, $url, $this->options));
         } catch (ConnectException $e) {
             throw new ConnectionException($e->getMessage(), 0, $e);
         }
