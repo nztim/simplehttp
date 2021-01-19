@@ -4,10 +4,6 @@ A Guzzle wrapper designed for simple HTTP requests.
 
 Based on Adam Wathan's kitetail/zttp.
 
-## Installation
-
-`composer require nztim/simplehttp`
-
 ## Usage
 
 ```php
