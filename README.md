@@ -4,7 +4,7 @@ A Guzzle wrapper designed for simple HTTP requests.
 
 Based on Adam Wathan's kitetail/zttp.
 
-## Usage
+### Usage
 
 ```php
 
@@ -40,5 +40,9 @@ $response->header('Content-Type'); // Specific header
 $response->isOk();
 $response->isSuccess();
 $response->isClientError();
-$response->isServerError()
+$response->isServerError();
 ```
+
+### Upgrading
+
+* v3.0: PHP 7.4|8.0 minimum, add HEAD request method

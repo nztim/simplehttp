@@ -3,7 +3,7 @@
     "description": "Simple HTTP requests.",
     "license": "MIT",
     "require": {
-        "php": ">=7.4",
+        "php": "^7.4|^8.0",
         "guzzlehttp/guzzle": "^7.0"
     },
     "require-dev": {
