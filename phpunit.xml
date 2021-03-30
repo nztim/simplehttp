@@ -2,6 +2,7 @@
 <phpunit backupGlobals="false"
          backupStaticAttributes="false"
          bootstrap="vendor/autoload.php"
+         cacheResult="false"
          colors="true"
          convertErrorsToExceptions="true"
          convertNoticesToExceptions="true"
@@ -9,7 +10,6 @@
          printerClass="LimeDeck\Testing\Printer"
          processIsolation="false"
          stopOnFailure="true"
-         syntaxCheck="false"
 >
     <testsuites>
         <testsuite name="Package Test Suite">

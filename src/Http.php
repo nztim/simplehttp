@@ -80,32 +80,38 @@ class Http
         return $this;
     }
 
-    public function get($url, $params = [])
+    public function head($url): HttpResponse
+    {
+        return $this->send('HEAD', $url, []);
+    }
+
+    public function get($url, $params = []): HttpResponse
     {
         return $this->send('GET', $url, [], $params); // Use query instead of body for GET
     }
 
-    public function post($url, $params = [])
+
+    public function post($url, $params = []): HttpResponse
     {
         return $this->send('POST', $url, $params);
     }
 
-    public function patch($url, $params = [])
+    public function patch($url, $params = []): HttpResponse
     {
         return $this->send('PATCH', $url, $params);
     }
 
-    public function put($url, $params = [])
+    public function put($url, $params = []): HttpResponse
     {
         return $this->send('PUT', $url, $params);
     }
 
-    public function delete($url, $params = [])
+    public function delete($url, $params = []): HttpResponse
     {
         return $this->send('DELETE', $url, $params);
     }
 
-    public function send($method, $url, $params, $query = [])
+    public function send($method, $url, $params, $query = []): HttpResponse
     {
         $this->options['query'] = $query;
         if ($params) {
