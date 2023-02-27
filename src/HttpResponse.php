@@ -4,6 +4,8 @@ use Psr\Http\Message\ResponseInterface;
 
 class HttpResponse
 {
+    private ResponseInterface $response;
+    
     public function __construct(ResponseInterface $response)
     {
         $this->response = $response;
